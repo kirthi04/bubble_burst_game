@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid pink;
+    background-color: #f1f1f1;
+}
+body {
+    background-color: #0e0c0c;
+}
+.clock {
+    font-size: 30px;
+}
+button {
+    background-color: pink;
+    border:1px solid black;
+}
+</style>
+</head>
+<body onload="startGame()">
+    <button onclick="myGameArea.upd()">RESUME</button>
+    <button onclick="myGameArea.stop()">PAUSE</button>
+    <p class="clock"></p>
+<script>
+ var myobs=[];
+   function startGame() {   myGameArea.start(); 
+    myScore = new component3("30px", "Consolas", "black", 100, 40, "text");
+    timer = new component3("70px", "Consolas", "black", 700, 300, "text");
+    for(var i=0 ; i<20 ;  i++)
+        {
+mygameupdate();
+        } 
+        myGameArea.upd();
+    }
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 1500;
+        this.canvas.height = 680;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]); 
+        this.frameNo = 0;
+        this.frameNo2 = 0; },
+        clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); 
+        var grd = this.context.createLinearGradient(0, 0,1500, 680);
+grd.addColorStop(0, "black");
+grd.addColorStop(0.5, "pink");
+grd.addColorStop(1, "rgb(126, 144, 179)");
+this.context.fillStyle=grd;
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+},
+    upd : function() {
+        this.interval = setInterval(updateGameArea, 100);
+    } ,
+    stop : function() {
+       clearInterval(this.interval);
+    },
+    stop2 : function() {
+       clearInterval(this.interval);
+       alert("YOUR SCORE IS " +myGameArea.frameNo );
+    }
+    } 
+    function component3(width, height, color, x, y, type) {
+    this.type = type;
+    this.width = width;
+    this.height = height;   
+    this.x = x;
+    this.y = y;    
+    this.update = function() {
+        ctx = myGameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } }}
+    function component(starta, enda, color, x, y,radius,) {
+    this.starta = starta;
+    this.enda = enda;
+    this.x = x;
+    this.y = y;
+    this.vx = 5;
+    this.vy = 5;
+    this.radius=radius; 
+    this.color= color; 
+   this.update = function(){
+    ctx = myGameArea.context;
+     ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius,(Math.PI/180)* this.starta, (Math.PI/180) *this.enda, true);
+    ctx.closePath();
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    
+   }}
+  function mygameupdate(){
+    var c1=Math.floor(Math.random()*256);
+    var c2=Math.floor(Math.random()*256);
+    var c3=Math.floor(Math.random()*256);
+  var x=Math.floor(Math.random()*1500);
+  var y=Math.floor(Math.random()*680);
+  var r= 25 + Math.floor(Math.random()*30);
+var c4="rgb("+c1+","+c2+","+c3+")";
+  var k=0;
+  for(var j=0; j<(myobs.length) ;j++)
+  {var t= (((myobs[j].x) -x)*((myobs[j].x) -x))  +  (((myobs[j].y) -y)*((myobs[j].y)  - y));
+    var z=(r+(myobs[j].radius))*(r+(myobs[j].radius));
+      if(t<z)
+      {
+          k++;
+      }
+    }
+    if(k==0){
+    myobs.push(new  component(0,360,c4,x,y,r));
+    }
+    else{
+        mygameupdate();
+    }
+myobs[j].update();
+  }
+ 
+  function updateGameArea() {
+  
+    myGameArea.canvas.addEventListener('click',function(evt){
+        for(var z=0 ; z<(myobs.length) ; z++)
+{
+    var dam= (((myobs[z].x  + 0)-(evt.clientX))*((myobs[z].x + 0)-(evt.clientX))) +  (((myobs[z].y + 0)-(evt.clientY))*((myobs[z].y + 0)-(evt.clientY))) ;
+    if(dam<((myobs[z].radius)*(myobs[z].radius))){
+        myobs[z].radius=0;
+        myobs[z].update();
+        myobs.splice(z,1);
+        break;
+    }
+}
+  },false);
+    myGameArea.clear();
+    myGameArea.frameNo += 1;
+   
+for(var q=0 ; q<(myobs.length) ; q++)
+{
+    for(var w=0 ; w<(myobs.length) ; w++)
+    {
+        if(q==w)
+        {
+            continue;
+        }
+     else{   var d1= (((myobs[q].x )-(myobs[w].x ))*((myobs[q].x)-(myobs[w].x)))  +  (((myobs[q].y)-(myobs[w].y))*((myobs[q].y)-(myobs[w].y)));
+    var d2=((myobs[q].radius)+(myobs[w].radius))*((myobs[q].radius)+(myobs[w].radius));
+if(d1<=d2)
+{
+    myobs[q].vx = -myobs[q].vx;
+    myobs[q].vy = -myobs[q].vy;
+}
+if (myobs[q].y + myobs[q].vy > 680 || myobs[q].y + myobs[q].vy < 0) {
+        myobs[q].vy = -myobs[q].vy;
+}
+if (myobs[q].x + myobs[q].vx > 1500 || myobs[q].x + myobs[q].vx < 0) {
+    myobs[q].vx = -myobs[q].vx;
+}
+    }}}
+   var qwe=0;
+    for(var newv=0; newv<(myobs.length); newv++){
+       
+        myobs[newv].x += myobs[newv].vx;
+        myobs[newv].y += myobs[newv].vy;
+        myobs[newv].update();
+       qwe = qwe + 3.14*(myobs[newv].radius)*(myobs[newv].radius);
+    }
+    if(qwe > (0.25*680*1500))
+    { 
+        timer.text=10.0-(myGameArea.frameNo2/10);
+    timer.update();
+myGameArea.frameNo2++;
+if(((myGameArea.frameNo2)/10) >= 10){
+    myGameArea.stop2();
+    }}
+    if(qwe <= (0.25*680*1500)){
+    myGameArea.frameNo2=0;
+    }
+    if((myGameArea.frameNo) <= 300 ){
+    if((myGameArea.frameNo)%50==0)
+    {
+        mygameupdate();
+    }}
+    if(((myGameArea.frameNo) > 300) && ((myGameArea.frameNo) <= 1000) ){
+    if((myGameArea.frameNo)%15==0)
+    {
+        mygameupdate();
+    }}
+    if((myGameArea.frameNo) > 1000 ){
+    if((myGameArea.frameNo)%5==0)
+    {
+        mygameupdate();
+    }}
+    myScore.text="SCORE: " + myGameArea.frameNo;
+    myScore.update();
+   
+   }
+  
+</script>
+</body>
+</html>
