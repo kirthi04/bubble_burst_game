@@ -167,7 +167,7 @@ if (myobs[q].x + myobs[q].vx > 1500 || myobs[q].x + myobs[q].vx < 0) {
         myobs[newv].update();
        qwe = qwe + 3.14*(myobs[newv].radius)*(myobs[newv].radius);
     }
-    if(qwe > (0.25*680*1500))
+    if(qwe > (0.75*680*1500))
     { 
         timer.text=10.0-(myGameArea.frameNo2/10);
     timer.update();
@@ -175,7 +175,7 @@ myGameArea.frameNo2++;
 if(((myGameArea.frameNo2)/10) >= 10){
     myGameArea.stop2();
     }}
-    if(qwe <= (0.25*680*1500)){
+    if(qwe <= (0.75*680*1500)){
     myGameArea.frameNo2=0;
     }
     if((myGameArea.frameNo) <= 300 ){
